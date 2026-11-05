@@ -4,7 +4,7 @@ import { UserModel } from "./schema";
 
 const app = express()
 
-app.use(express.json());
+app.use(express.json()); 
 
 app.post("/signup", async (req, res) => {
     const {success, data} = SignupSchema.safeParse(req.body)
@@ -35,8 +35,32 @@ app.post("/signup", async (req, res) => {
     });
 })
 
-app.post("/signin", (req, res) => {
+app.post("/signin", async(req, res) => {
+    const {success, data}  = SignupSchema.safeParse(req.body);
+    if(!success) {
+        res.status(411).json({message: "Incorrect inputs"})
+        return;
+    }
 
+    try {
+        const user = await UserModel.findOne({
+            username: data.username,
+            password: data.password
+        });
+        if(!user) {
+            res.status(401).json({
+                message: "Invalid username or password"
+            });
+            return;
+        }
+        res.status(200).json({
+            message: "Logged in successfully",
+            id: user._id
+        });
+    }
+    catch(error) {
+        res.status(500).json("Internal server error")
+   }
 })
 
 app.listen(3001);

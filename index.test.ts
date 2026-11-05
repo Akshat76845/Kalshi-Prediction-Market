@@ -1,7 +1,7 @@
 import { test, expect } from "bun:test";
 import axios from "axios";
 
-const BACKEND_URL = "http://localhost:3001";
+const BACKEND_URL = "http://localhost:3001"; 
 
 const USERNAME = `harkirat-${Math.random()}`
 
@@ -33,7 +33,7 @@ test("If the username and pasword are not present it should return a 411", async
 })
 
 
-test("If the username and pasword are not present it should return a 412", async () => {
+test("If the username and pasword are not correct it should return a 412", async () => {
     const res = await axios.post(`${BACKEND_URL}/signup`, {
         username: USERNAME,
         password: "123123"
